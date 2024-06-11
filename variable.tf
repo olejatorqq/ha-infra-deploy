@@ -40,8 +40,20 @@ variable "private_key_path" {
   sensitive = true
 }
 
-variable "target_host" {
-  description = "Хост, на который установливается пакеты из Ansible"
+variable "target_host_1" {
+  description = "Хост 1, на который установливается пакеты из Ansible"
+  type        = string
+  sensitive = true
+}
+
+variable "target_host_2" {
+  description = "Хост 2, на который установливается пакеты из Ansible"
+  type        = string
+  sensitive = true
+}
+
+variable "target_host_3" {
+  description = "Хост 3, на который установливается пакеты из Ansible"
   type        = string
   sensitive = true
 }
