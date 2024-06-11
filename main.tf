@@ -26,21 +26,20 @@ provider "openstack" {
   region      = var.region
 }
 
-
 resource "null_resource" "install_ansible_1" {
   provisioner "local-exec" {
-    command = "ansible-playbook -i '${var.target_host_1},' -u ${var.ssh_user} --private-key=${var.private_key_path} install_ansible.yaml"
+    command = "ansible-playbook -i '${var.target_host_1},' -u ${var.ssh_user} --private-key=${var.private_key_path} --ask-vault-pass ansible-playbooks/first_playbook.yaml"
   }
 }
 
 resource "null_resource" "install_ansible_2" {
   provisioner "local-exec" {
-    command = "ansible-playbook -i '${var.target_host_2},' -u ${var.ssh_user} --private-key=${var.private_key_path} install_ansible.yaml"
+    command = "ansible-playbook -i '${var.target_host_2},' -u ${var.ssh_user} --private-key=${var.private_key_path} ansible-playbooks/second_ansible.yaml"
   }
 }
 
 resource "null_resource" "install_ansible_3" {
   provisioner "local-exec" {
-    command = "ansible-playbook -i '${var.target_host_3},' -u ${var.ssh_user} --private-key=${var.private_key_path} install_ansible.yaml"
+    command = "ansible-playbook -i '${var.target_host_3},' -u ${var.ssh_user} --private-key=${var.private_key_path} ansible-playbooks/third_ansible.yaml"
   }
 }
