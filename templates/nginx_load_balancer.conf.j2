@@ -8,8 +8,9 @@ events {
 
 http {
     upstream backend {
-        server {{ web_server_2 }};
-        server {{ web_server_3 }};
+        server {{ web_server_1 }}:5000;
+        server {{ web_server_2 }}:5000;
+        server {{ web_server_3 }}:5000;
     }
 
     server {

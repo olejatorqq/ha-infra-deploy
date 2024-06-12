@@ -1,44 +1,50 @@
 ---
-- name: Install and configure Nginx load balancer
+- name: Install and configure Nginx load balancer and deploy backend
   hosts: all
+  become: yes
 
   vars_files:
     - vault.yml
 
   tasks:
-    - name: Install Nginx
+    - name: Install necessary packages
       apt:
-        name: nginx
+        name:
+          - nginx
+          - python3
+          - python3-venv
         state: present
+        update_cache: yes
+
+    - name: Create a virtual environment for the backend
+      command: python3 -m venv /opt/venv
+
+    - name: Install Flask in the virtual environment
+      command: /opt/venv/bin/pip install flask
+
+    - name: Copy backend application
+      copy:
+        src: ../backend/app.py
+        dest: /opt/app.py
+        mode: '0755'
+
+    - name: Start backend application with nohup
+      shell: nohup /opt/venv/bin/python /opt/app.py &
+
+    - name: Ensure backend is running
+      command: pgrep -f "/opt/venv/bin/python /opt/app.py"
+      register: backend_process
+      retries: 5
+      delay: 2
+      until: backend_process.rc == 0
 
     - name: Copy Nginx load balancer configuration file
       template:
         src: ../templates/nginx_load_balancer.conf.j2
         dest: /etc/nginx/nginx.conf
-      notify: Restart Nginx
 
-    - name: Create a sample backend application
-      copy:
-        content: |
-          server {
-              listen 8080; -- замени порт
-              server_name localhost;
-
-              location / {
-                  return 200 'Hello from backend application';
-                  add_header Content-Type text/plain;
-              }
-          }
-        dest: /etc/nginx/sites-available/backend.conf
-
-    - name: Enable backend application
-      file:
-        src: /etc/nginx/sites-available/backend.conf
-        dest: /etc/nginx/sites-enabled/backend.conf
-        state: link
-
-  handlers:
-    - name: Restart Nginx
+    - name: Start Nginx
       service:
         name: nginx
-        state: restarted
+        state: started
+        enabled: yes
