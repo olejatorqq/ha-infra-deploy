@@ -26,20 +26,26 @@ provider "openstack" {
   region      = var.region
 }
 
-resource "null_resource" "install_ansible_1" {
+resource "null_resource" "backend_1" {
   provisioner "local-exec" {
-    command = "ansible-playbook -i '${var.target_host_1},' -u ${var.ssh_user} --private-key=${var.private_key_path} --ask-vault-pass ansible-playbooks/first_playbook.yaml"
+    command = "ansible-playbook -i '${var.target_host_1},' -u ${var.ssh_user} --private-key=${var.private_key_path} --vault-password-file=${path.module}/my_vault_password.txt ansible-playbooks/first_playbook.yaml"
   }
 }
 
-resource "null_resource" "install_ansible_2" {
+resource "null_resource" "backend_2" {
   provisioner "local-exec" {
-    command = "ansible-playbook -i '${var.target_host_2},' -u ${var.ssh_user} --private-key=${var.private_key_path} ansible-playbooks/second_ansible.yaml"
+    command = "ansible-playbook -i '${var.target_host_2},' -u ${var.ssh_user} --private-key=${var.private_key_path} --vault-password-file=${path.module}/my_vault_password.txt ansible-playbooks/second_playbook.yaml"
   }
 }
 
-resource "null_resource" "install_ansible_3" {
+resource "null_resource" "postgresql_2" {
   provisioner "local-exec" {
-    command = "ansible-playbook -i '${var.target_host_3},' -u ${var.ssh_user} --private-key=${var.private_key_path} ansible-playbooks/third_ansible.yaml"
+    command = "ansible-playbook -i '${var.target_host_2},' -u ${var.ssh_user} --private-key=${var.private_key_path} --vault-password-file=${path.module}/my_vault_password.txt ansible-playbooks/second_playbook_postgresql.yaml"
+  }
+}
+
+resource "null_resource" "backend_3" {
+  provisioner "local-exec" {
+    command = "ansible-playbook -i '${var.target_host_3},' -u ${var.ssh_user} --private-key=${var.private_key_path} --vault-password-file=${path.module}/my_vault_password.txt ansible-playbooks/third_playbook.yaml"
   }
 }

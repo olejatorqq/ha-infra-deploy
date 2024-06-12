@@ -2,3 +2,4 @@
 /terraform.tfstate
 /terraform.tfstate.backup
 /.terraform.lock.hcl
+my_vault_password.txt
