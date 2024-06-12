@@ -5,6 +5,8 @@ import logging
 
 app = Flask(__name__)
 
+logging.basicConfig(level=logging.INFO)
+
 DATABASE_URL = 'postgresql://postgres@79.141.77.75/todo_db'
 
 def get_db_connection():

@@ -38,6 +38,8 @@
     - name: Execute create_table.sh script
       shell: /tmp/create_table.sh
       become: true              
+      args:
+        creates: /opt/tables_created
 
     - name: Create directory for WAL archiving
       file:
