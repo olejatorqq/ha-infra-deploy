@@ -1,24 +1,32 @@
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
+import psycopg2
+import psycopg2.extras
+import logging
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres@79.141.77.75/todo_db'
-db = SQLAlchemy(app)
 
-class Todo(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    task = db.Column(db.String(200), nullable=False)
-    completed = db.Column(db.Boolean, default=False)
+DATABASE_URL = 'postgresql://postgres@79.141.77.75/todo_db'
+
+def get_db_connection():
+    conn = psycopg2.connect(DATABASE_URL)
+    return conn
 
 @app.route('/')
 def main():
     try:
-        todos = Todo.query.all()
-        todo_list = "<h1>Todo List:</h1>"
-        for todo in todos:
-            todo_list += f"<p>Task: {todo.task} - Completed: {todo.completed}</p>"
-        return todo_list
+        conn = get_db_connection()
+        cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+        cur.execute('SELECT id, task_name, category_id FROM tasks;')
+        tasks = cur.fetchall()
+        cur.close()
+        conn.close()
+
+        task_list = "<h1>Tasks List:</h1>"
+        for task in tasks:
+            task_list += f"<p>ID: {task['id']}, Task Name: {task['task_name']}, Category ID: {task['category_id']}</p>"
+        return task_list
     except Exception as e:
+        logging.error(f"An error occurred: {str(e)}")
         return f"An error occurred: {str(e)}"
 
 if __name__ == '__main__':

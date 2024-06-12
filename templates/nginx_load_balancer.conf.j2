@@ -1,6 +1,5 @@
 worker_processes auto;
 pid /run/nginx.pid;
-include /etc/nginx/modules-enabled/*.conf;
 
 events {
     worker_connections 1024;
@@ -8,6 +7,7 @@ events {
 
 http {
     upstream backend {
+        ip_hash;
         server {{ web_server_1 }}:5000;
         server {{ web_server_2 }}:5000;
         server {{ web_server_3 }}:5000;
