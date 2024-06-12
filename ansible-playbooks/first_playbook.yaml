@@ -20,6 +20,18 @@
     - name: Create a virtual environment for the backend
       command: python3 -m venv /opt/venv
 
+    - name: Install Flask SQLAlchemy
+      pip:
+        name: Flask-SQLAlchemy
+        executable: /opt/venv/bin/pip
+        state: present
+
+    - name: Install psycopg2-binary
+      pip:
+        name: psycopg2-binary
+        executable: /opt/venv/bin/pip
+        state: present     
+
     - name: Install Flask in the virtual environment
       command: /opt/venv/bin/pip install flask
 
@@ -43,6 +55,11 @@
       template:
         src: ../templates/nginx_load_balancer.conf.j2
         dest: /etc/nginx/nginx.conf
+      
+    - name: Restart Nginx
+      service:
+        name: nginx
+        state: restarted
 
     - name: Start Nginx
       service:

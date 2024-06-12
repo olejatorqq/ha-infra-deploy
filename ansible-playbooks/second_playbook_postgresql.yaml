@@ -13,13 +13,6 @@
         state: present
         update_cache: yes
 
-    - name: Configure PostgreSQL to use password authentication
-      lineinfile:
-        path: /etc/postgresql/16/main/pg_hba.conf
-        regexp: '^local\s+all\s+postgres\s+peer'
-        line: 'local   all             postgres                                md5'
-      notify: Reload PostgreSQL
-
     - name: Check if PostgreSQL user already exists
       shell: sudo -u postgres psql -c "SELECT usename FROM pg_user WHERE usename='{{ postgresql_user }}'" | grep -q '{{ postgresql_user }}'
       register: postgres_user_exists
@@ -38,18 +31,32 @@
 
     - name: Copy create_table.sh script
       copy:
-        src: ../postgresql/create_table.sh
-        dest: /tmp/populate_db.sh
+        src: ../postgresql/server_2/create_table.sh
+        dest: /tmp/create_table.sh
         mode: '0755'
 
     - name: Execute create_table.sh script
-      shell: /tmp/populate_db.sh
+      shell: /tmp/create_table.sh
       become: true              
 
-    - name: Copy pg_hba.conf file
+    - name: Create directory for WAL archiving
+      file:
+        path: /archive
+        state: directory
+        owner: postgres
+        group: postgres
+        mode: '0755'
+
+    - name: Copy pg_hba.conf file to replace pg_hba.conf
       copy:
-        src: ../postgresql/pg_hba.conf
+        src: ../postgresql/server_2/pg_hba.conf
         dest: /etc/postgresql/16/main/pg_hba.conf
+      notify: Reload PostgreSQL
+
+    - name: Copy postgresql.conf file to replace postgresql.conf
+      copy:
+        src: ../postgresql/server_2/postgresql.conf
+        dest: /etc/postgresql/16/main/postgresql.conf
       notify: Reload PostgreSQL
 
   handlers:
