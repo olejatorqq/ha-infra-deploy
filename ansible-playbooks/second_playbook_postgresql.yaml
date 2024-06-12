@@ -1,5 +1,5 @@
 - name: Install and configure PostgreSQL
-  hosts: all
+  hosts: second_server
   become: true
   vars_files:
     - vault.yml
@@ -34,7 +34,17 @@
       become_user: postgres
       postgresql_db:
         name: "{{ postgresql_db_name }}"
-        owner: "{{ postgresql_user }}"      
+        owner: "{{ postgresql_user }}"
+
+    - name: Copy create_table.sh script
+      copy:
+        src: ../postgresql/create_table.sh
+        dest: /tmp/populate_db.sh
+        mode: '0755'
+
+    - name: Execute create_table.sh script
+      shell: /tmp/populate_db.sh
+      become: true              
 
     - name: Copy pg_hba.conf file
       copy:
