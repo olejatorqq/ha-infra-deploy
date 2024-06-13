@@ -3,37 +3,38 @@
 Этот проект предназначен для развертывания высокодоступной инфраструктуры с использованием Ansible и Terraform.
 
 ## Структура проекта
-
+```
 .
 ├── ansible-playbooks
-│ ├── inventory.ini
-│ ├── playbooks
-│ │ ├── first_playbook.yaml
-│ │ ├── second_playbook_postgresql.yaml
-│ │ ├── third_playbook_postgresql.yaml
-│ │ └── vault.yml
-│ └── roles
-│ └── nginx
-│ └── templates
-│ └── nginx_load_balancer.conf
+│   ├── inventory.ini
+│   ├── playbooks
+│   │   ├── first_playbook.yaml
+│   │   ├── second_playbook_postgresql.yaml
+│   │   ├── third_playbook_postgresql.yaml
+│   │   └── vault.yml
+│   └── roles
+│       └── nginx
+│           └── templates
+│               └── nginx_load_balancer.conf
 ├── backend
-│ ├── app.py
-│ └── templates
-│ └── index.html
+│   ├── app.py
+│   └── templates
+│       └── index.html
 ├── postgresql
-│ ├── server_2
-│ │ ├── create_table.sh
-│ │ ├── pg_hba.conf
-│ │ └── postgresql.conf
-│ └── server_3
-│ └── postgresql.conf
-├── terraform
-│ ├── main.tf
-│ ├── my_vault_password.txt
-│ ├── terraform.tfstate
-│ └── terraform.tfstate.backup
-└── README.md
-
+│   ├── server_2
+│   │   ├── create_table.sh
+│   │   ├── pg_hba.conf
+│   │   └── postgresql.conf
+│   └── server_3
+│       └── postgresql.conf
+├── README.md
+└── terraform
+    ├── main.tf
+    ├── my_vault_password.txt
+    ├── terraform.tfstate
+    ├── terraform.tfstate.backup
+    └── variable.tf
+```
 
 ## Описание структуры файлов
 
@@ -49,3 +50,5 @@
   - **main.tf**: Основной файл конфигурации Terraform.
   - **my_vault_password.txt**: Файл с паролем для расшифровки зашифрованных данных в Ansible Vault. (Для работы Terraform необходимо создать файл)
   - **terraform.tfstate** и **terraform.tfstate.backup**: Файлы состояния Terraform.
+
+## Работа приложения
