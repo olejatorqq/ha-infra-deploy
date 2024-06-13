@@ -18,10 +18,15 @@ def main():
     try:
         conn = get_db_connection()
         cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        cur.execute('SELECT id, task_name, category_id FROM tasks;')
+        cur.execute('''
+            SELECT tasks.id, tasks.task_name, categories.category_name 
+            FROM tasks
+            JOIN categories ON tasks.category_id = categories.id;
+        ''')
         tasks = cur.fetchall()
         cur.close()
         conn.close()
+
         return render_template('index.html', tasks=tasks)
     except Exception as e:
         logging.error(f"An error occurred: {str(e)}")
