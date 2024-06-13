@@ -25,7 +25,7 @@ provider "openstack" {
   password    = var.password
   region      = var.region
 }
-
+# you need to create my_vault_password.txt with password (hehe its cybersecurity)
 resource "null_resource" "backend_1" {
   provisioner "local-exec" {
     command = "ansible-playbook -i '${var.target_host_1},' -u ${var.ssh_user} --private-key=${var.private_key_path} --vault-password-file=${path.module}/my_vault_password.txt ../ansible-playbooks/plybooks/first_playbook.yaml"

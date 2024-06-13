@@ -59,7 +59,7 @@
 
     - name: Copy Nginx load balancer configuration file
       template:
-        src: ../../backend/templates/nginx_load_balancer.conf.j2
+        src: ../roles/nginx/templates/nginx_load_balancer.conf
         dest: /etc/nginx/nginx.conf
       when: ansible_host == '79.141.71.161'
 

@@ -1,2 +1,3 @@
 .vscode
-my_vault_password.txt
+
+/terraform/my_vault_password.txt
