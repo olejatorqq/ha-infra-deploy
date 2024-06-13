@@ -32,18 +32,6 @@ resource "null_resource" "backend_1" {
   }
 }
 
-resource "null_resource" "backend_2" {
-  provisioner "local-exec" {
-    command = "ansible-playbook -i '${var.target_host_2},' -u ${var.ssh_user} --private-key=${var.private_key_path} --vault-password-file=${path.module}/my_vault_password.txt ansible-playbooks/second_playbook.yaml"
-  }
-}
-
-resource "null_resource" "backend_3" {
-  provisioner "local-exec" {
-    command = "ansible-playbook -i '${var.target_host_3},' -u ${var.ssh_user} --private-key=${var.private_key_path} --vault-password-file=${path.module}/my_vault_password.txt ansible-playbooks/third_playbook.yaml"
-  }
-}
-
 resource "null_resource" "postgresql_2" {
   provisioner "local-exec" {
     command = "ansible-playbook -i '${var.target_host_2},' -u ${var.ssh_user} --private-key=${var.private_key_path} --vault-password-file=${path.module}/my_vault_password.txt ansible-playbooks/second_playbook_postgresql.yaml"

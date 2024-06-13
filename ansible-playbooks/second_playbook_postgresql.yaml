@@ -35,11 +35,24 @@
         dest: /tmp/create_table.sh
         mode: '0755'
 
+    - name: Check if 'categories' table exists
+      shell: |
+        sudo -u postgres psql -U postgres -d {{ postgresql_db_name }} -c "\dt" | grep -qw categories
+      register: categories_table_exists
+      failed_when: false
+      changed_when: false
+
+    - name: Check if 'tasks' table exists
+      shell: |
+        sudo -u postgres psql -U postgres -d {{ postgresql_db_name }} -c "\dt" | grep -qw tasks
+      register: tasks_table_exists
+      failed_when: false
+      changed_when: false
+
     - name: Execute create_table.sh script
       shell: /tmp/create_table.sh
-      become: true              
-      args:
-        creates: /opt/tables_created
+      become: true
+      when: not categories_table_exists.stdout and not tasks_table_exists.stdout
 
     - name: Create directory for WAL archiving
       file:
