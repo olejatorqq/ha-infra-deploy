@@ -87,4 +87,4 @@
 
 ### Доменное имя
 Также было сделан домен для удобного доступа из внешней сети - [ha-infa-deploy.ru](http://ha-infa-deploy.ru/)
-![alt text](image.png)
+![alt text](images/10.png)
