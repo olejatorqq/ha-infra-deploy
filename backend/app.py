@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 import psycopg2
 import psycopg2.extras
 import logging
@@ -22,11 +22,7 @@ def main():
         tasks = cur.fetchall()
         cur.close()
         conn.close()
-
-        task_list = "<h1>Tasks List:</h1>"
-        for task in tasks:
-            task_list += f"<p>ID: {task['id']}, Task Name: {task['task_name']}, Category ID: {task['category_id']}</p>"
-        return task_list
+        return render_template('index.html', tasks=tasks)
     except Exception as e:
         logging.error(f"An error occurred: {str(e)}")
         return f"An error occurred: {str(e)}"
